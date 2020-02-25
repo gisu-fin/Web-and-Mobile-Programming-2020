@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+
+
 class App extends React.Component {
 
     constructor(props) {
@@ -15,6 +17,18 @@ class App extends React.Component {
 
 
     render () {
+
+        const {hyva, neutraali, huono} = this.state
+
+        //kaikki yhteen
+        const kaikki = (hyva + neutraali + huono)
+
+        //keskiarvo
+        const keskiarvo = ((hyva*1 + neutraali*0 + huono*(-1))/kaikki).toFixed(2)
+
+        //prosentti
+        const positiivisia = ((hyva/kaikki)*100).toFixed(2)+"%"
+
         return (
             <div>                
                 <h1>Anna palautetta</h1>
@@ -26,6 +40,8 @@ class App extends React.Component {
                     <p>Hyvä {this.state.hyva}</p>
                     <p>Neutraali {this.state.neutraali}</p>
                     <p>Huono {this.state.huono}</p>
+                    <p>Keskiarvo {keskiarvo}</p>
+                    <p>Positiivisia {positiivisia}</p>
                     </div> 
             </div>
         )
