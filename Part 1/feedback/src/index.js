@@ -7,20 +7,30 @@ const Button = ({handleClick, text}) => (
 )
 
 const Statistic = (props) => ( 
-    <div>
-        <p>{props.text} {props.counter}</p>
-    </div>
+    <tr><td>{props.text}</td><td>{props.counter}</td></tr> 
 )
 
-const Statistics = (props) => (
-    <div>
+const Statistics = (props) => { 
+    if (props.kaikki === 0) { 
+        return (
+            <div>
+                <p>Yhtään palautetta ei ole annettu</p>
+            </div>
+        )
+    }
+    return ( 
+      
+    <table>
+        <tbody>
             <Statistic text = "Hyvä" counter = {props.hyva} />
             <Statistic text = "Neutraali" counter = {props.neutraali} />
             <Statistic text = "Huono" counter = {props.huono} />
             <Statistic text = "Keskiarvo" counter = {props.keskiarvo} />
             <Statistic text = "Positiivisia" counter = {props.positiivisia} />    
-    </div> 
-)
+        </tbody>  
+    </table>
+    )
+    }
 
 class App extends React.Component {
 
@@ -68,7 +78,7 @@ class App extends React.Component {
                     <Button handleClick={this.klikHuono} text = "Huono"/>
                 <h1>Statistiikka</h1>
                     <Statistics hyva = {hyva} neutraali = {neutraali} huono = {huono}
-                    keskiarvo = {keskiarvo} positiivisia = {positiivisia} />
+                    keskiarvo = {keskiarvo} positiivisia = {positiivisia} kaikki = {kaikki} />
             </div>
         )
     }
