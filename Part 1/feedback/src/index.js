@@ -22,9 +22,9 @@ const Statistics = (props) => {
       
     <table>
         <tbody>
-            <Statistic text = "Hyvä" counter = {props.hyva} />
-            <Statistic text = "Neutraali" counter = {props.neutraali} />
-            <Statistic text = "Huono" counter = {props.huono} />
+            <Statistic text = "Hyvä" counter = {props.state.hyva} />
+            <Statistic text = "Neutraali" counter = {props.state.neutraali} />
+            <Statistic text = "Huono" counter = {props.state.huono} />
             <Statistic text = "Keskiarvo" counter = {props.keskiarvo} />
             <Statistic text = "Positiivisia" counter = {props.positiivisia} />    
         </tbody>  
@@ -43,19 +43,6 @@ class App extends React.Component {
         }
       }
 
-    klikHyva = () => {
-        this.setState({hyva:this.state.hyva + 1})
-    }
-
-    klikNeutraali = () => {
-        this.setState({neutraali:this.state.neutraali + 1})
-    }
-   
-    klikHuono = () => {
-        this.setState({huono:this.state.huono + 1})
-    }
-    
-
     render () {
 
         const {hyva, neutraali, huono} = this.state
@@ -69,16 +56,19 @@ class App extends React.Component {
         //prosentti
         const positiivisia = ((hyva/kaikki)*100).toFixed(2)+"%"
 
-
         return (
             <div>                
                 <h1>Anna palautetta</h1>
-                    <Button handleClick={this.klikHyva} text = "Hyvä"/>
-                    <Button handleClick={this.klikNeutraali} text = "Neutraali"/>
-                    <Button handleClick={this.klikHuono} text = "Huono"/>
+                    <Button handleClick= { () => this.setState ({hyva:this.state.hyva + 1 })} text = "Hyvä"/>
+                    <Button handleClick= { () => this.setState ({neutraali:this.state.neutraali +1 })} text = "Neutraali"/>
+                    <Button handleClick= { () => this.setState ({huono:this.state.huono +1 })} text = "Huono"/>
                 <h1>Statistiikka</h1>
-                    <Statistics hyva = {hyva} neutraali = {neutraali} huono = {huono}
-                    keskiarvo = {keskiarvo} positiivisia = {positiivisia} kaikki = {kaikki} />
+                    <Statistics 
+                    state = {this.state}
+                    keskiarvo = {keskiarvo} 
+                    positiivisia = {positiivisia} 
+                    kaikki = {kaikki} 
+                    />
             </div>
         )
     }
