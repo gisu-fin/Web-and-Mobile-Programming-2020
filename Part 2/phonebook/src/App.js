@@ -18,12 +18,20 @@ class App extends React.Component {
     const person = {
       name: this.state.newName
     }
-    const persons = this.state.persons.concat(person)
 
-    this.setState({
-      persons: persons,
-      newName: ''
-    })
+    if (this.state.persons.map (person => person.name).includes(this.state.newName)){
+        alert (this.state.newName + ' on jo olemassa, lisää uusi nimi')
+        this.setState({
+          newName: '',
+          newNumber: ''
+        })
+  } else {
+    const persons = this.state.persons.concat(person)
+      this.setState({
+        persons: persons,
+        newName: ''
+      })
+  }
   }
 
   handleNameChange = (event) => {
