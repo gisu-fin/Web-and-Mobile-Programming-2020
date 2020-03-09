@@ -5,9 +5,10 @@ class App extends React.Component {
     super(props)
     this.state = {
       persons: [
-        { name: 'Arto Hellas' }
+        { name: 'Arto Hellas', number: '020-123456' }
       ],
-      newName: ''
+      newName: '',
+      newNumber: ''
     }
   }
 
@@ -16,7 +17,8 @@ class App extends React.Component {
     console.log('push')
     console.log(event.target)
     const person = {
-      name: this.state.newName
+      name: this.state.newName,
+      number: this.state.newNumber
     }
 
     if (this.state.persons.map (person => person.name).includes(this.state.newName)){
@@ -29,7 +31,8 @@ class App extends React.Component {
     const persons = this.state.persons.concat(person)
       this.setState({
         persons: persons,
-        newName: ''
+        newName: '',
+        newNumber: ''
       })
   }
   }
@@ -37,6 +40,11 @@ class App extends React.Component {
   handleNameChange = (event) => {
     console.log(event.target.value)
     this.setState({newName: event.target.value})
+  }
+
+  handleNumberChange = (event) => {
+    console.log(event.target.value)
+    this.setState({newNumber: event.target.value})
   }
 
   render() {
@@ -54,12 +62,18 @@ class App extends React.Component {
             />
           </div>
           <div>
+            numero: <input 
+            value = {this.state.newNumber} 
+            onChange = {this.handleNumberChange}
+            />
+          </div>
+          <div>
             <button type="submit">lisää</button>
           </div>
         </form>
         <h2>Numerot</h2>
         <ul>
-          {this.state.persons.map(names => <p key = {names.name}> {names.name} </p>)}
+          {this.state.persons.map(names => <p key = {names.name}> {names.name} {names.number} </p>)}
         </ul>
 
       </div>
