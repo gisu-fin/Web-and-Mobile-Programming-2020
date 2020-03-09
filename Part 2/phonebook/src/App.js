@@ -1,4 +1,6 @@
 import React from 'react';
+import Form from './components/Form';
+import People from './components/People';
 
 class App extends React.Component {
   constructor(props) {
@@ -52,30 +54,15 @@ class App extends React.Component {
     
     return (
       <div>
-        debug: {this.state.newName} 
-        <h2>Puhelinluettelo</h2>
-        <form onSubmit = {this.addPerson}>
-          <div>
-            nimi: <input 
-            value = {this.state.newName} 
-            onChange = {this.handleNameChange}
-            />
-          </div>
-          <div>
-            numero: <input 
-            value = {this.state.newNumber} 
-            onChange = {this.handleNumberChange}
-            />
-          </div>
-          <div>
-            <button type="submit">lisää</button>
-          </div>
-        </form>
-        <h2>Numerot</h2>
-        <ul>
-          {this.state.persons.map(names => <p key = {names.name}> {names.name} {names.number} </p>)}
-        </ul>
-
+      <Form 
+        addPerson = {this.addPerson}
+        handleNameChange = {this.handleNameChange}
+        handleNumberChange = {this.handleNumberChange}
+        state = {this.state}
+      />
+      <People
+        state = {this.state}
+      />
       </div>
     )
   }
