@@ -26,22 +26,20 @@ const Part = (props) => {
       )
 }
 
-/*
-const Total = (props) => {
-    return (
-        <div>
-         <p>Total {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises} exercises</p>
-        </div>
-      )
+const Total = ({parts}) => {
+  return (
+      <div>
+       <p>Total {parts.reduce((sum, {exercises}) => sum + exercises ,0)} exercises</p>
+      </div>
+    )
 }
-*/
 
-//<Total parts = {props.course.parts} />
 const Course = (props) => {
     return (
     <div>
     <Header course = {props.course} />
-    <Contents parts = {props.course.parts}  />
+    <Contents parts = {props.course.parts}  />    
+    <Total parts = {props.course.parts} />
     </div>
     )
 }
