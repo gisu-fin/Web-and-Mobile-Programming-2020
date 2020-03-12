@@ -3,15 +3,6 @@ import Form from './components/Form';
 import People from './components/People';
 import axios from 'axios';
 
-/*
-2.9 Telephone directory, part 6
-At the moment, the new numbers added to the directory are not sent to the server. 
-Change the app so that its state is synchronized with the server state
-*/
-
-
-
-
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -60,7 +51,23 @@ class App extends React.Component {
       console.log(response)
     })
   }
-  }
+  }//add
+
+  deletePerson = (id) => {
+    console.log ('deletessä')
+
+    const thisDude = this.state.persons.find(p => p.id === id);
+    
+    if (window.confirm("Haluatko oikeasti poistaa " + thisDude.name + ":n ?")){ 
+      axios
+      .delete('http://localhost:3001/persons/'+ id)
+      .then(response => {
+        console.log(response) 
+        const people = this.state.persons.filter(p => p.id !== thisDude.id)  
+        this.setState({persons:people})
+      })//then
+    }//if
+  }//deleteperson
 
   handleNameChange = (event) => {
     console.log(event.target.value)
@@ -86,6 +93,7 @@ class App extends React.Component {
       />
       <People
         state = {this.state}
+        deletePerson = {this.deletePerson}
       />
       </div>
     )

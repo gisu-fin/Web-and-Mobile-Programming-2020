@@ -1,12 +1,20 @@
 import React from 'react';
 
-const People = ({state}) => {
+const People = ({state, deletePerson}) => {
     return( 
         <div>
             <h2>Numerot</h2>
-            <ul>
-                {state.persons.map(names => <p key = {names.name}> {names.name} {names.number} </p>)}
-            </ul>
+            <table>
+                <tbody>
+                {state.persons.map(names => 
+                <tr key = {names.name}> 
+                <td> {names.name} </td>
+                <td> {names.number} </td>
+                <td> <button id = 'id' onClick = {deletePerson.bind(this, names.id)}> Poista</button> </td>
+                </tr>
+                )}
+                </tbody>
+            </table>
         </div>
     )
 }
