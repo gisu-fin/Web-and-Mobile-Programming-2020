@@ -1,17 +1,36 @@
 import React from 'react';
 import Form from './components/Form';
 import People from './components/People';
+import axios from 'axios';
+
+/*
+2.9 Telephone directory, part 6
+At the moment, the new numbers added to the directory are not sent to the server. 
+Change the app so that its state is synchronized with the server state
+*/
+
+
+
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      persons: [
-        { name: 'Arto Hellas', number: '020-123456' }
-      ],
+      persons: [],
       newName: '',
       newNumber: ''
     }
+    console.log('constructor')
+  }
+
+  componentDidMount(){
+    console.log ('did mount')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log ('promise fullfilled')
+        this.setState({persons: response.data})
+      })
   }
 
   addPerson = (event) => {
@@ -27,15 +46,19 @@ class App extends React.Component {
         alert (this.state.newName + ' on jo olemassa, lisää uusi nimi')
         this.setState({
           newName: '',
-          newNumber: ''
+          newNumber: '',
+
         })
   } else {
-    const persons = this.state.persons.concat(person)
+    axios.post('http://localhost:3001/persons', person)
+    .then(response => {
       this.setState({
-        persons: persons,
+        persons: this.state.persons.concat(response.data),
         newName: '',
         newNumber: ''
       })
+      console.log(response)
+    })
   }
   }
 
@@ -51,7 +74,8 @@ class App extends React.Component {
 
   render() {
 
-    
+  console.log ('render') 
+
     return (
       <div>
       <Form 
