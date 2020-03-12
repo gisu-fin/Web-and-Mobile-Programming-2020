@@ -38,22 +38,22 @@ class App extends React.Component {
         this.setState({
           newName: '',
           newNumber: '',
-
         })
-  } else {
-    axios.post('http://localhost:3001/persons', person)
-    .then(response => {
-      this.setState({
-        persons: this.state.persons.concat(response.data),
-        newName: '',
-        newNumber: ''
+    } else {
+      axios.post('http://localhost:3001/persons', person)
+      .then(response => {
+        this.setState({
+          persons: this.state.persons.concat(response.data),
+          newName: '',
+          newNumber: ''
+        })
+        console.log(response)
       })
-      console.log(response)
-    })
-  }
+    }
   }//add
 
   deletePerson = (id) => {
+
     console.log ('deletessä')
 
     const thisDude = this.state.persons.find(p => p.id === id);
@@ -65,8 +65,8 @@ class App extends React.Component {
         console.log(response) 
         const people = this.state.persons.filter(p => p.id !== thisDude.id)  
         this.setState({persons:people})
-      })//then
-    }//if
+      })
+    }
   }//deleteperson
 
   handleNameChange = (event) => {
