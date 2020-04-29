@@ -43,7 +43,7 @@ class Notes extends React.Component {
   const uusi = this.props.route.params.note
   const ID = Math.floor(Math.random() * 1000) + 1
   try {
-    AsyncStorage.setItem(ID, uusi, () => {
+    AsyncStorage.setItem(ID.toString(), JSON.stringify(uusi), () => {
       console.log ('Onnistui')
     })
     console.log(ID + ' handleadd ' + uusi)
