@@ -43,18 +43,16 @@ class Notes extends React.Component {
   const uusi = this.props.route.params.note
   const ID = Math.floor(Math.random() * 1000) + 1
   try {
-    AsyncStorage.setItem(ID.toString(), JSON.stringify(uusi), () => {
-      console.log ('Onnistui')
-    })
-    console.log(ID + ' handleadd ' + uusi)
+    AsyncStorage.setItem(ID.toString(), JSON.stringify(uusi)).then (() => {
+      console.log(ID + ' -id handleadd note: ' + uusi + ' lisäys onnistui')  
+      this.setState({
+        notes: this.state.notes.concat(uusi),
+        newNote: ''
+      })
+    })  
   }catch (err){
     console.log (err)
   }
-
-  this.setState({
-    notes: this.state.notes.concat(uusi),
-    newNote: ''
-  })
 
   }
 
@@ -69,19 +67,13 @@ class Notes extends React.Component {
   */
   fetchAll = async () => {
     try {
-      /*
+      
       const keys = await AsyncStorage.getAllKeys() 
       console.log('fetchall keys ' + keys)
       const notes = await AsyncStorage.multiGet(keys)
-      console.log('fetchall notes' + notes)
+      console.log('fetchall notes ' + notes)
       return notes
-      */
-     AsyncStorage.getAllKeys((err, keys) => {
-       AsyncStorage.multiGet(keys,(err, stores) => {
-         console.log(stores)
-         return stores
-       })
-     })
+
     } catch (error) {
         console.log(error, "problem")
     }
