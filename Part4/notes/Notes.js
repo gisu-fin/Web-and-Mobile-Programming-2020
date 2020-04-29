@@ -12,6 +12,11 @@ class Notes extends React.Component {
     newNote: ''
   }
 
+  componentDidMount(){
+    const notes = this.fetchAll()
+    console.log(notes)
+  }
+
   showNotes() {
     const show = this.state.notes.map(note => (
       <Text style={styles.note}> {note} </Text>
@@ -25,21 +30,21 @@ class Notes extends React.Component {
     }
   }
 
-  /*
+  
   remove = async () => {
     try {
-      const keys = AsyncStorage.getAllKeys
+      const keys = await AsyncStorage.getAllKeys()
       console.log('removessa' + keys)
-      AsyncStorage.multiRemove(keys)
-      console.log('ultiremove jälkeen ' + AsyncStorage.getAllKeys)
+      await AsyncStorage.multiRemove(keys)
+      console.log('multiremove tehty')
     } catch (error) {
       console.log ('removessa' + error)
     }
   }
-  */
+  
 
   handleAdd = async () => {
-  //AsyncStorage.clear
+  
   const uusi = this.props.route.params.note
   const ID = Math.floor(Math.random() * 1000) + 1
   try {
@@ -72,6 +77,7 @@ class Notes extends React.Component {
       console.log('fetchall keys ' + keys)
       const notes = await AsyncStorage.multiGet(keys)
       console.log('fetchall notes ' + notes)
+      this.setState({notes: notes})
       return notes
 
     } catch (error) {
