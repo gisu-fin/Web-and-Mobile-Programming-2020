@@ -5,10 +5,7 @@ import styles from './Styles';
 
 class Notes extends React.Component {
   state = {
-    notes: [
-      'TestiNote1',
-      'TestiNote2'
-    ],
+    notes: [],
     newNote: ''
   }
 
@@ -61,15 +58,6 @@ class Notes extends React.Component {
 
   }
 
-  /*
-  saveData(){  
-    let name = "Michal";  
-    AsyncStorage.setItem('user',name);  
-    let name2 = "Mirva"
-    AsyncStorage.setItem('user',name2)
-
-  }  
-  */
   fetchAll = async () => {
     try {
       
