@@ -19,36 +19,54 @@ class Notes extends React.Component {
     return show
   }
 
+  componentDidMount () {
+    this.fetchAll()
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.route.params?.note !== prevProps.route.params?.note) {
       this.handleAdd()
     }
   }
 
-  /*
+  
   remove = async () => {
     try {
-      const keys = AsyncStorage.getAllKeys
-      console.log('removessa' + keys)
-      AsyncStorage.multiRemove(keys)
-      console.log('ultiremove jälkeen ' + AsyncStorage.getAllKeys)
+      await AsyncStorage.getAllKeys ((err, keys) => {
+        AsyncStorage.multiRemove(keys, (err)=> {
+          console.log('removed')
+        })
+      })
+      //console.log('removessa' + keys)
+      //AsyncStorage.multiRemove(keys)
+      console.log('multiremove jälkeen')
     } catch (error) {
       console.log ('removessa' + error)
     }
   }
-  */
+  
 
   handleAdd = async () => {
   //AsyncStorage.clear
   const uusi = this.props.route.params.note
-  const ID = Math.floor(Math.random() * 1000) + 1
+  const id = Math.floor(Math.random() * 1000) + 1
+  
+  /*
+  let noteObject = {
+    id: ID,
+    text: uusi
+  }
+  */
+  
   try {
-    AsyncStorage.setItem(ID, uusi, () => {
-      console.log ('Onnistui')
+    AsyncStorage.setItem(id.toString, JSON.stringify(uusi), (err, result) => {
+      console.log ('Onnistui' + uusi + result)
+      //AsyncStorage.getItem(ID, (err, result) => {
+      //  console.log(result);
+      //})
     })
-    console.log(ID + ' handleadd ' + uusi)
   }catch (err){
-    console.log (err)
+    console.log ('handleadd' + err)
   }
 
   this.setState({
@@ -76,9 +94,10 @@ class Notes extends React.Component {
       console.log('fetchall notes' + notes)
       return notes
       */
-     AsyncStorage.getAllKeys((err, keys) => {
+     await AsyncStorage.getAllKeys((err, keys) => {
        AsyncStorage.multiGet(keys,(err, stores) => {
-         console.log(stores)
+         //console.log(stores)
+         stores
          return stores
        })
      })
