@@ -9,12 +9,7 @@ class Notes extends React.Component {
     newNote: ''
   }
 
-  /*
-{
-      id: '',
-      note: ''
-    }
-  */
+  
   componentDidMount(){
     const notes = this.fetchAll()
     console.log(notes)
@@ -54,6 +49,7 @@ class Notes extends React.Component {
   
   const uusi = this.props.route.params.note
   const ID = Math.floor(Math.random() * 1000) + 1
+  //olisko pitänyt olla note olio jolla id ja sisältö? tutki ja kokeile jos jää aikaa.
   try {
     AsyncStorage.setItem(ID.toString(), JSON.stringify(uusi)).then (() => {
       console.log(ID + ' -id handleadd note: ' + uusi + ' lisäys onnistui')  
@@ -65,17 +61,47 @@ class Notes extends React.Component {
   }catch (err){
     console.log (err)
   }
-
   }
 
+/*
+  async fetchOne(key) {
+    try {
+      const fetchedNote =  await AsyncStorage.getItem(key);
+      const note = JSON.parse(fetchedNote);
+      return note;
+    } catch (error) {
+      console.log(error.message);
+    }
+    return
+  }
+*/
+
+//haetaan kaikki avaimet ja kaikki data, muokataan niin ettei avaimet tule mukaan ja lisätään tilaan
   fetchAll = async () => {
     try {
-      
+
       const keys = await AsyncStorage.getAllKeys() 
-      console.log('fetchall keys ' + keys)
-      const notes = await AsyncStorage.multiGet(keys)
-      console.log('fetchall notes ' + notes)
-      this.setState({notes: notes})
+      //console.log('fetchall keys ' + keys)
+
+      const data = await AsyncStorage.multiGet(keys)
+      console.log('fetchall notes ' + data)
+      //console.log(data[0][1])
+
+      // ei olisi pakko olla tässä muodossa muokkaa jos on aikaa muokata
+      // ei kaunis ratkaisu mutta toimii silti
+      const notes = data.map((note, i) => {
+        const apu = data[i][1]
+        //mitähän tehty väärin kun on aivan sama käyttääkö parsea vai ei. :thinking:
+        JSON.parse(apu)
+        const help = apu.replace(/^"|"$/g, '');
+        console.log(help + 'muoks')
+        this.setState({
+          notes: this.state.notes.concat(help),
+          newNote: ''
+        })
+      })
+      
+      //this.setState({notes: notes})
       return notes
 
     } catch (error) {
@@ -83,25 +109,18 @@ class Notes extends React.Component {
     }
   }
 
+  /*
+  testinä, ei tarvii enää?
   displayData = () => {  
     const notes = this.fetchAll()
     console.log (notes)
     alert (notes)
-    /*
-    try {  
-      const keys = await AsyncStorage.getAllKeys()
-      console.log(keys)
-      const result = await AsyncStorage.multiGet(keys)
-      //return 
-      result.map(req => JSON.parse(req)).forEach(console.log);
-      //alert(note);  
-    }  
-    catch(error){  
-      alert(error)  
-    }
-    */
   }  
-  
+  <TouchableOpacity onPress ={this.displayData}>  
+          <Text>Click to display data</Text>  
+        </TouchableOpacity>   
+
+  */
 
   render() {
 
@@ -114,9 +133,7 @@ class Notes extends React.Component {
         <TouchableOpacity onPress ={this.remove}>  
           <Text>Click to delete all</Text>  
         </TouchableOpacity>    
-        <TouchableOpacity onPress ={this.displayData}>  
-          <Text>Click to display data</Text>  
-        </TouchableOpacity>   
+        
 
         {this.showNotes()}
         
