@@ -45,7 +45,7 @@ class AddNotesScreen extends React.Component {
         newNote: ''
       })
       */
-      this.props.navigation.navigate('NoteScreen', { note: this.state.newNoteText });
+      this.props.navigation.navigate('NoteScreen', { note: this.state.newNoteText });  
 
     }
 
@@ -54,7 +54,7 @@ class AddNotesScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style = {styles.container}>
 
         <TextInput
           style={styles.input}
@@ -64,7 +64,7 @@ class AddNotesScreen extends React.Component {
         />
 
         <TouchableOpacity onPress={this.handleAdd}>
-          <Text style={styles.button}>Add new note!</Text>
+          <Text style = {styles.button}>Add new note!</Text>
         </TouchableOpacity>
 
       </View>
