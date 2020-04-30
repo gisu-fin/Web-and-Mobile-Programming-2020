@@ -19,8 +19,8 @@ class AddNotesScreen extends React.Component {
     //tarkistetaan onko jo olemassa 
     if (this.props.route.params.notes.map(note => note).includes(this.state.newNoteText)) {
       Alert.alert(
-        'Huomio!',
-        this.state.newNoteText + ' on jo olemassa!',
+        'Alert!',
+        this.state.newNoteText + ' already exists!',
         [
           {
             text: "Cancel",

@@ -9,16 +9,26 @@ class Notes extends React.Component {
     newNote: ''
   }
 
+  /*
+{
+      id: '',
+      note: ''
+    }
+  */
   componentDidMount(){
     const notes = this.fetchAll()
     console.log(notes)
   }
 
   showNotes() {
+    if (this.state.notes.length == 0) {
+      return <Text style={styles.note}>No notes, maybe you should add some?</Text>
+    }else { 
     const show = this.state.notes.map(note => (
       <Text style={styles.note}> {note} </Text>
     ))
     return show
+    }
   }
 
   componentDidUpdate(prevProps) {
