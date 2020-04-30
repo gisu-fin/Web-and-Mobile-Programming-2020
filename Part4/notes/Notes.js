@@ -9,8 +9,8 @@ class Notes extends React.Component {
     newNote: ''
   }
 
-  
-  componentDidMount(){
+
+  componentDidMount() {
     const notes = this.fetchAll()
     console.log(notes)
   }
@@ -18,11 +18,12 @@ class Notes extends React.Component {
   showNotes() {
     if (this.state.notes.length == 0) {
       return <Text style={styles.note}>No notes, maybe you should add some?</Text>
-    }else { 
-    const show = this.state.notes.map(note => (
-      <Text style={styles.note}> {note} </Text>
-    ))
-    return show
+    } else {
+      const show = this.state.notes.map(note => (
+        <Text style={styles.note}> {note} </Text>
+        //jos jää aikaa - muuta touchableksi, lisää kokeeksi muokkaus, key pitää toki hommata jostain
+      ))
+      return show
     }
   }
 
@@ -31,56 +32,73 @@ class Notes extends React.Component {
       this.handleAdd()
     }
   }
-
-  
-  remove = async () => {
+  //jos jää aikaa - keys omaksi funktioksi joka palauttaa avaimen ja yksittäisen poisto
+  delete = async () => {
     try {
       const keys = await AsyncStorage.getAllKeys()
       console.log('removessa' + keys)
       await AsyncStorage.multiRemove(keys)
       console.log('multiremove tehty')
-    } catch (error) {
-      console.log ('removessa' + error)
-    }
-  }
-  
-
-  handleAdd = async () => {
-  
-  const uusi = this.props.route.params.note
-  const ID = Math.floor(Math.random() * 1000) + 1
-  //olisko pitänyt olla note olio jolla id ja sisältö? tutki ja kokeile jos jää aikaa.
-  try {
-    AsyncStorage.setItem(ID.toString(), JSON.stringify(uusi)).then (() => {
-      console.log(ID + ' -id handleadd note: ' + uusi + ' lisäys onnistui')  
+      this.fetchAll()
       this.setState({
-        notes: this.state.notes.concat(uusi),
+        notes: '',
         newNote: ''
       })
-    })  
-  }catch (err){
-    console.log (err)
-  }
-  }
-
-/*
-  async fetchOne(key) {
-    try {
-      const fetchedNote =  await AsyncStorage.getItem(key);
-      const note = JSON.parse(fetchedNote);
-      return note;
     } catch (error) {
-      console.log(error.message);
+      console.log('removessa' + error)
     }
-    return
   }
-*/
 
-//haetaan kaikki avaimet ja kaikki data, muokataan niin ettei avaimet tule mukaan ja lisätään tilaan
+  //poistaa kaiken 
+  remove = () => {
+
+    Alert.alert(
+      'Alert!',
+      'Are you sure about deleting ALL notes?',
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        {
+          text: "YES! Delete everything",
+          onPress: () => {
+            console.log("OK Pressed")
+            this.delete()
+          },
+          style: "default"
+        }
+      ],
+      { cancelable: false }
+    );
+
+  }
+
+
+  handleAdd = async () => {
+
+    const uusi = this.props.route.params.note
+    const ID = Math.floor(Math.random() * 1000) + 1
+    //olisko pitänyt olla note olio jolla id ja sisältö? tutki ja kokeile jos jää aikaa.
+    try {
+      AsyncStorage.setItem(ID.toString(), JSON.stringify(uusi)).then(() => {
+        console.log(ID + ' -id handleadd note: ' + uusi + ' lisäys onnistui')
+        this.setState({
+          notes: this.state.notes.concat(uusi),
+          newNote: ''
+        })
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  //haetaan kaikki avaimet ja kaikki data, muokataan niin ettei avaimet tule mukaan ja lisätään tilaan
   fetchAll = async () => {
     try {
 
-      const keys = await AsyncStorage.getAllKeys() 
+      const keys = await AsyncStorage.getAllKeys()
       //console.log('fetchall keys ' + keys)
 
       const data = await AsyncStorage.multiGet(keys)
@@ -100,12 +118,12 @@ class Notes extends React.Component {
           newNote: ''
         })
       })
-      
+
       //this.setState({notes: notes})
       return notes
 
     } catch (error) {
-        console.log(error, "problem")
+      console.log(error, "problem")
     }
   }
 
@@ -114,9 +132,8 @@ class Notes extends React.Component {
   displayData = () => {  
     const notes = this.fetchAll()
     console.log (notes)
-    alert (notes)
   }  
-  <TouchableOpacity onPress ={this.displayData}>  
+  <TouchableOpacity onPress = {this.displayData}>  
           <Text>Click to display data</Text>  
         </TouchableOpacity>   
 
@@ -126,23 +143,28 @@ class Notes extends React.Component {
 
     return (
 
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
+        <ScrollView>
+          <View style={styles.header}>
+            <Text style={styles.header}>Notes</Text>
+          </View>
 
-        <Text style={styles.header}>Notes</Text>
+          <View style={styles.notesection} >
+            {this.showNotes()}
+          </View>
 
-        <TouchableOpacity onPress ={this.remove}>  
-          <Text>Click to delete all</Text>  
-        </TouchableOpacity>    
-        
 
-        {this.showNotes()}
-        
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('AddNotes', { notes: this.state.notes })}>
-          <Text style = {styles.button}>Add new note!</Text>
-        </TouchableOpacity>
+          <View style={styles.bottom} >
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('AddNotes', { notes: this.state.notes })}>
+              <Text style={styles.button}>Add new note!</Text>
+            </TouchableOpacity>
 
-      </ScrollView>
-
+            <TouchableOpacity onPress={this.remove}>
+              <Text style={styles.delete}>Delete all</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </View>
     );
   }
 }
