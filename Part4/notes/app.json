@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "notes",
-    "slug": "notes",
+    "name": "WebMob2020-Part4-notes",
+    "slug": "webmob2020-part4-notes",
     "platforms": [
       "ios",
       "android",
@@ -23,6 +23,7 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": ""
   }
 }

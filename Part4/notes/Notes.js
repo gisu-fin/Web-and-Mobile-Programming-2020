@@ -9,16 +9,46 @@ class Notes extends React.Component {
     newNote: ''
   }
 
+//selvitä ja korjaa: Warning: Each child in a list should have a unique "key" prop 
 
   componentDidMount() {
     const notes = this.fetchAll()
     console.log(notes)
   }
 
+/*
+  Errorit poiston jälkeen tulee nyt täältä. 
+  Tulkitsee pituuden noten sisällön pituudeksi jos vain yksi note.
+  Esim moi olis 3 vaikka vain yksi note ja pituus siis 1.
+  Jos monta notea, laskee oikein.
+  Tuloste
+  multiremove tehty
+  fetchall notes 
+  addnotesscreenin handleadd teksti: Enough do go
+  addnotesscreenin handleadd pituus: 0
+  Jos palauttaa nollan, lisätään suoraan.
+  50 -id handleadd note: Enough do go lisäys onnistui
+  shownotesin else: notes pituus 12
+  shownotesin else: notes sisältö Enough do go
+  shownotesin else: notes pituus 12
+  shownotesin else: notes sisältö Enough do go
+
+  undefined is not a function (near '...this.state.notes.map...')
+  * Notes.js:31:18 in showNotes
+  * Notes.js:170:10 in render
+  
+  uudelleen latauksen jälkeen:
+  fetchall notes 50,"Enough do go"
+  shownotesin else: notes pituus 1
+  shownotesin else: notes sisältö Enough do go
+
+*/
   showNotes() {
     if (this.state.notes.length == 0) {
       return <Text style={styles.note}>No notes, maybe you should add some?</Text>
     } else {
+      console.log('shownotesin else: notes pituus ' + this.state.notes.length)
+      console.log('shownotesin else: notes sisältö ' + this.state.notes)
       const show = this.state.notes.map(note => (
         <Text style={styles.note}> {note} </Text>
         //jos jää aikaa - muuta touchableksi, lisää kokeeksi muokkaus, key pitää toki hommata jostain
@@ -32,6 +62,17 @@ class Notes extends React.Component {
       this.handleAdd()
     }
   }
+
+  //ei toiminutkaan näin, ehkä metodia kutsuessa olisi myös pitänyt olla await :thinking:
+  /*
+  keys = async () => {
+    const keys = [await AsyncStorage.getAllKeys()]
+    //console.log('keys metodi: ' + keys)
+    return keys
+  }
+  */
+
+  //deleten jälkeen erroria yhtäkkiä uutta notea lisätessä johtuukohan mergestä? ei ehdi korjata, otetaan
   //jos jää aikaa - keys omaksi funktioksi joka palauttaa avaimen ja yksittäisen poisto
   delete = async () => {
     try {
@@ -75,7 +116,7 @@ class Notes extends React.Component {
 
   }
 
-
+  
   handleAdd = async () => {
 
     const uusi = this.props.route.params.note
@@ -112,7 +153,7 @@ class Notes extends React.Component {
         //mitähän tehty väärin kun on aivan sama käyttääkö parsea vai ei. :thinking:
         JSON.parse(apu)
         const help = apu.replace(/^"|"$/g, '');
-        console.log(help + 'muoks')
+        //console.log(help + 'muoks')
         this.setState({
           notes: this.state.notes.concat(help),
           newNote: ''
@@ -128,14 +169,11 @@ class Notes extends React.Component {
   }
 
   /*
-  testinä, ei tarvii enää?
-  displayData = () => {  
-    const notes = this.fetchAll()
-    console.log (notes)
-  }  
-  <TouchableOpacity onPress = {this.displayData}>  
-          <Text>Click to display data</Text>  
-        </TouchableOpacity>   
+ delete pois kunnes korjattu 
+  
+            <TouchableOpacity onPress={this.remove}>
+              <Text style={styles.delete}>Delete all</Text>
+            </TouchableOpacity>
 
   */
 
@@ -162,6 +200,7 @@ class Notes extends React.Component {
             <TouchableOpacity onPress={this.remove}>
               <Text style={styles.delete}>Delete all</Text>
             </TouchableOpacity>
+
           </View>
         </ScrollView>
       </View>
