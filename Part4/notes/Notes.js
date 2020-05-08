@@ -12,8 +12,9 @@ class Notes extends React.Component {
 //selvitä ja korjaa: Warning: Each child in a list should have a unique "key" prop 
 
   componentDidMount() {
+    //ei sit niinku mitään hyötyä tallentaa niin kauan ku fechall ei toimi.
     const notes = this.fetchAll()
-    console.log(notes)
+    console.log('component did mountissa: ' + notes)
   }
 
 /*
@@ -42,14 +43,30 @@ class Notes extends React.Component {
   shownotesin else: notes pituus 1
   shownotesin else: notes sisältö Enough do go
 
-*/
-  showNotes() {
-    if (this.state.notes.length == 0) {
+  if (this.state.notes.length == 0) {
       return <Text style={styles.note}>No notes, maybe you should add some?</Text>
     } else {
       console.log('shownotesin else: notes pituus ' + this.state.notes.length)
       console.log('shownotesin else: notes sisältö ' + this.state.notes)
       const show = this.state.notes.map(note => (
+        <Text style={styles.note}> {note} </Text>
+        //jos jää aikaa - muuta touchableksi, lisää kokeeksi muokkaus, key pitää toki hommata jostain
+      ))
+      return show
+    }
+
+*/
+  //koska fetchall palautta pilkun tms niin ei toimi. helpompi ratkaista staten ongelma?
+  showNotes() {
+
+    const notes = this.fetchAll()
+    console.log('shownotesin notes muuttuja:' + notes)
+    if (notes.length == 0) {
+      return <Text style={styles.note}>No notes, maybe you should add some?</Text>
+    } else {
+      console.log('shownotesin else: notes pituus ' + notes.length)
+      console.log('shownotesin else: notes sisältö ' + notes)
+      const show = notes.map(note => (
         <Text style={styles.note}> {note} </Text>
         //jos jää aikaa - muuta touchableksi, lisää kokeeksi muokkaus, key pitää toki hommata jostain
       ))
@@ -135,7 +152,13 @@ class Notes extends React.Component {
     }
   }
 
-  //haetaan kaikki avaimet ja kaikki data, muokataan niin ettei avaimet tule mukaan ja lisätään tilaan
+  /*
+    haetaan kaikki avaimet ja kaikki data, muokataan niin ettei avaimet tule mukaan ja lisätään tilaan
+    map on rikki!
+    siksi ei toimi täältä haku!
+    fetchallin käsitelty notes: ,
+  */
+
   fetchAll = async () => {
     try {
 
@@ -147,20 +170,23 @@ class Notes extends React.Component {
       //console.log(data[0][1])
 
       // ei olisi pakko olla tässä muodossa muokkaa jos on aikaa muokata
-      // ei kaunis ratkaisu mutta toimii silti
+      // ei kaunis ratkaisu mutta toimii silti -- eikä toimikaan!
       const notes = data.map((note, i) => {
         const apu = data[i][1]
         //mitähän tehty väärin kun on aivan sama käyttääkö parsea vai ei. :thinking:
         JSON.parse(apu)
         const help = apu.replace(/^"|"$/g, '');
-        //console.log(help + 'muoks')
+        console.log(help + ' muoks')
+        //notes.push({help})
         this.setState({
           notes: this.state.notes.concat(help),
           newNote: ''
         })
       })
 
-      //this.setState({notes: notes})
+      //fetchallin käsitelty notes: ,
+      console.log('fetchallin käsitelty notes: ' + notes)
+      //eli tää on hyödytön.
       return notes
 
     } catch (error) {
