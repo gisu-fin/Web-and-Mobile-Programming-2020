@@ -9,64 +9,17 @@ class Notes extends React.Component {
     newNote: ''
   }
 
-//selvitä ja korjaa: Warning: Each child in a list should have a unique "key" prop 
 
   componentDidMount() {
-    //ei sit niinku mitään hyötyä tallentaa niin kauan ku fechall ei toimi.
     const notes = this.fetchAll()
-    console.log('component did mountissa: ' + notes)
+    console.log(notes)
   }
 
-/*
-  Errorit poiston jälkeen tulee nyt täältä. 
-  Tulkitsee pituuden noten sisällön pituudeksi jos vain yksi note.
-  Esim moi olis 3 vaikka vain yksi note ja pituus siis 1.
-  Jos monta notea, laskee oikein.
-  Tuloste
-  multiremove tehty
-  fetchall notes 
-  addnotesscreenin handleadd teksti: Enough do go
-  addnotesscreenin handleadd pituus: 0
-  Jos palauttaa nollan, lisätään suoraan.
-  50 -id handleadd note: Enough do go lisäys onnistui
-  shownotesin else: notes pituus 12
-  shownotesin else: notes sisältö Enough do go
-  shownotesin else: notes pituus 12
-  shownotesin else: notes sisältö Enough do go
-
-  undefined is not a function (near '...this.state.notes.map...')
-  * Notes.js:31:18 in showNotes
-  * Notes.js:170:10 in render
-  
-  uudelleen latauksen jälkeen:
-  fetchall notes 50,"Enough do go"
-  shownotesin else: notes pituus 1
-  shownotesin else: notes sisältö Enough do go
-
-  if (this.state.notes.length == 0) {
-      return <Text style={styles.note}>No notes, maybe you should add some?</Text>
-    } else {
-      console.log('shownotesin else: notes pituus ' + this.state.notes.length)
-      console.log('shownotesin else: notes sisältö ' + this.state.notes)
-      const show = this.state.notes.map(note => (
-        <Text style={styles.note}> {note} </Text>
-        //jos jää aikaa - muuta touchableksi, lisää kokeeksi muokkaus, key pitää toki hommata jostain
-      ))
-      return show
-    }
-
-*/
-  //koska fetchall palautta pilkun tms niin ei toimi. helpompi ratkaista staten ongelma?
   showNotes() {
-
-    const notes = this.fetchAll()
-    console.log('shownotesin notes muuttuja:' + notes)
-    if (notes.length == 0) {
+    if (this.state.notes.length == 0) {
       return <Text style={styles.note}>No notes, maybe you should add some?</Text>
     } else {
-      console.log('shownotesin else: notes pituus ' + notes.length)
-      console.log('shownotesin else: notes sisältö ' + notes)
-      const show = notes.map(note => (
+      const show = this.state.notes.map(note => (
         <Text style={styles.note}> {note} </Text>
         //jos jää aikaa - muuta touchableksi, lisää kokeeksi muokkaus, key pitää toki hommata jostain
       ))
@@ -80,16 +33,8 @@ class Notes extends React.Component {
     }
   }
 
-  //ei toiminutkaan näin, ehkä metodia kutsuessa olisi myös pitänyt olla await :thinking:
   /*
-  keys = async () => {
-    const keys = [await AsyncStorage.getAllKeys()]
-    //console.log('keys metodi: ' + keys)
-    return keys
-  }
-  */
-
-  //deleten jälkeen erroria yhtäkkiä uutta notea lisätessä johtuukohan mergestä? ei ehdi korjata, otetaan
+  //toimii, aiheuttaa poiston jälkeen ongelmia, pois kunnes ongelma korjattu
   //jos jää aikaa - keys omaksi funktioksi joka palauttaa avaimen ja yksittäisen poisto
   delete = async () => {
     try {
@@ -133,7 +78,8 @@ class Notes extends React.Component {
 
   }
 
-  
+  */
+
   handleAdd = async () => {
 
     const uusi = this.props.route.params.note
@@ -152,13 +98,7 @@ class Notes extends React.Component {
     }
   }
 
-  /*
-    haetaan kaikki avaimet ja kaikki data, muokataan niin ettei avaimet tule mukaan ja lisätään tilaan
-    map on rikki!
-    siksi ei toimi täältä haku!
-    fetchallin käsitelty notes: ,
-  */
-
+  //haetaan kaikki avaimet ja kaikki data, muokataan niin ettei avaimet tule mukaan ja lisätään tilaan
   fetchAll = async () => {
     try {
 
@@ -170,23 +110,20 @@ class Notes extends React.Component {
       //console.log(data[0][1])
 
       // ei olisi pakko olla tässä muodossa muokkaa jos on aikaa muokata
-      // ei kaunis ratkaisu mutta toimii silti -- eikä toimikaan!
+      // ei kaunis ratkaisu mutta toimii silti
       const notes = data.map((note, i) => {
         const apu = data[i][1]
         //mitähän tehty väärin kun on aivan sama käyttääkö parsea vai ei. :thinking:
         JSON.parse(apu)
         const help = apu.replace(/^"|"$/g, '');
-        console.log(help + ' muoks')
-        //notes.push({help})
+        console.log(help + 'muoks')
         this.setState({
           notes: this.state.notes.concat(help),
           newNote: ''
         })
       })
 
-      //fetchallin käsitelty notes: ,
-      console.log('fetchallin käsitelty notes: ' + notes)
-      //eli tää on hyödytön.
+      //this.setState({notes: notes})
       return notes
 
     } catch (error) {
@@ -195,12 +132,10 @@ class Notes extends React.Component {
   }
 
   /*
- delete pois kunnes korjattu 
-  
+ pois kunnes toimii
             <TouchableOpacity onPress={this.remove}>
               <Text style={styles.delete}>Delete all</Text>
             </TouchableOpacity>
-
   */
 
   render() {
@@ -221,10 +156,6 @@ class Notes extends React.Component {
           <View style={styles.bottom} >
             <TouchableOpacity onPress={() => this.props.navigation.navigate('AddNotes', { notes: this.state.notes })}>
               <Text style={styles.button}>Add new note!</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={this.remove}>
-              <Text style={styles.delete}>Delete all</Text>
             </TouchableOpacity>
 
           </View>

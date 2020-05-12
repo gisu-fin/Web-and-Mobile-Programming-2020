@@ -14,15 +14,10 @@ class AddNotesScreen extends React.Component {
 
   handleAdd = () => {
     //tsekkaa datan
-    console.log('addnotesscreenin handleadd teksti: ' + this.state.newNoteText)
-    console.log('addnotesscreenin handleadd pituus: ' + this.props.route.params.notes.length)
+    console.log(this.state.newNoteText)
     //const uusi = this.state.newNote
     //tarkistetaan onko jo olemassa 
-    if (this.props.route.params.notes.length == 0) {
-      this.props.navigation.navigate('NoteScreen', { note: this.state.newNoteText });
-      console.log('Addnotesscreenin handleadd if: Jos palauttaa nollan, lisätään suoraan.')
-    }
-    else if (this.props.route.params.notes.map(note => note).includes(this.state.newNoteText)) {
+    if (this.props.route.params.notes.map(note => note).includes(this.state.newNoteText)) {
       Alert.alert(
         'Alert!',
         this.state.newNoteText + ' already exists!',
